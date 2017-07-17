@@ -49,6 +49,7 @@ public class BaseModelProvider extends ContentProvider {
     private final int COLLECTION = 1;
     private final int SINGLE_ROW = 2;
     public UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    protected OModel mModel = null;
 
     public static Uri buildURI(String authority, String model, String username) {
         Uri.Builder uriBuilder = new Uri.Builder();
@@ -72,6 +73,13 @@ public class BaseModelProvider extends ContentProvider {
     public OUser getUser(Uri uri) {
         String username = uri.getQueryParameter(KEY_USERNAME);
         return OdooAccountManager.getDetails(getContext(), username);
+    }
+
+    public void setModel(Uri uri) {
+        String path = uri.getQueryParameter(KEY_MODEL);
+        String username = uri.getQueryParameter(KEY_USERNAME);
+        mModel = OModel.get(getContext(), path, username);
+        assert mModel != null;
     }
 
     public OModel getModel(Uri uri) {

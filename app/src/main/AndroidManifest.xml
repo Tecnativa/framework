@@ -102,6 +102,25 @@
         <activity
             android:name="com.odoo.addons.customers.CustomerDetails"
             android:windowSoftInputMode="adjustPan" />
+
+        <service
+            android:name=".addons.tasks.services.TaskSyncService"
+            android:exported="true"
+            android:process=":sync_task">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/task_sync_adapter" />
+        </service>
+        <provider
+            android:name="com.odoo.addons.tasks.providers.ProjectTaskProvider"
+            android:authorities="com.odoo.addons.tasks.project_task"
+            android:label="@string/sync_label_tasks"
+            android:multiprocess="true" />
+
     </application>
 
 </manifest>

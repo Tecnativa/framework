@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <!--View Layout-->
+    <LinearLayout
+        android:id="@+id/task_view_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <odoo.controls.OForm
+            android:id="@+id/taskForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:modelName="project.task">
+
+            <odoo.controls.OField
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="name"
+                app:fieldTextAppearance="?android:textAppearanceMedium"
+                app:iconResource="@drawable/ic_action_universe"></odoo.controls.OField>
+
+
+            <odoo.controls.OField
+                android:id="@+id/date_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="date_start"
+                app:fieldTextAppearance="?android:textAppearanceMedium"
+                app:iconResource="@drawable/ic_action_message"></odoo.controls.OField>
+
+            <View
+                style="@style/ViewSeparator"
+                android:layout_marginLeft="72dp" />
+
+            <odoo.controls.OField
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:fieldLabelColor="@color/theme_secondary"
+                app:fieldName="shipping_origin_id"
+                app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
+
+
+            <!--<odoo.controls.OField-->
+                <!--android:id="@+id/full_address"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:controlLabel="@string/label_address"-->
+                <!--app:fieldLabelColor="@color/theme_secondary"-->
+                <!--app:fieldName="full_address"-->
+                <!--app:fieldTextAppearance="?android:textAppearanceMedium"-->
+                <!--app:iconResource="@drawable/ic_action_location"></odoo.controls.OField>-->
+
+
+        </odoo.controls.OForm>
+    </LinearLayout>
+    <!--Edit Layout-->
+    <LinearLayout
+        android:id="@+id/task_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/statusBarHeight"
+        android:visibility="gone">
+
+        <odoo.controls.OForm
+            android:id="@+id/taskFormEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            app:modelName="project.task">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/parallax_view_edit"
+                android:orientation="vertical">
+
+                <odoo.controls.OField
+                    android:id="@android:id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/default_8dp"
+                    app:fieldName="name"
+                    app:fieldTextAppearance="?android:textAppearanceLarge"
+                    app:showIcon="false"
+                    app:showLabel="false"></odoo.controls.OField>
+
+                <View style="@style/ViewSeparator" />
+
+                <!--<odoo.controls.OField-->
+                    <!--android:id="@+id/unload"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--app:fieldName="unload"-->
+                    <!--app:fieldTextAppearance="?android:textAppearanceMedium"-->
+                    <!--app:showLabel="false"></odoo.controls.OField>-->
+
+                <odoo.controls.OField
+                    android:id="@+id/shipping_origin_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fieldName="shipping_origin_id"
+                    app:fieldTextAppearance="?android:textAppearanceMedium"
+                    app:showLabel="false"
+                    app:widgetType="SearchableLive"></odoo.controls.OField>
+
+                <View
+                    style="@style/ViewSeparator"
+                    android:layout_marginLeft="72dp" />
+
+            </LinearLayout>
+        </odoo.controls.OForm>
+
+    </LinearLayout>
+</LinearLayout>

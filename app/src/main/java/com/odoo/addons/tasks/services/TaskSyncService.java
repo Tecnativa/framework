@@ -1,39 +1,42 @@
 /**
  * Odoo, Open Source Management Solution
  * Copyright (C) 2012-today Odoo SA (<http:www.odoo.com>)
- * <p/>
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version
- * <p/>
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details
- * <p/>
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http:www.gnu.org/licenses/>
- * <p/>
- * Created on 30/12/14 3:11 PM
+ *
+ * Created on 2/1/15 11:07 AM
  */
-package com.odoo.config;
+package com.odoo.addons.tasks.services;
 
-import com.odoo.addons.customers.Customers;
-import com.odoo.addons.tasks.Tasks;
-import com.odoo.core.support.addons.AddonsHelper;
-import com.odoo.core.support.addons.OAddon;
+import android.content.Context;
+import android.os.Bundle;
 
-public class Addons extends AddonsHelper {
+import com.odoo.addons.tasks.models.ProjectTask;
+import com.odoo.core.service.OSyncAdapter;
+import com.odoo.core.service.OSyncService;
+import com.odoo.core.support.OUser;
 
-    /**
-     * Declare your required module here
-     * NOTE: For maintain sequence use object name in asc order.
-     * Ex.:
-     * OAddon partners = new OAddon(Partners.class).setDefault();
-     * for maintain sequence call withSequence(int sequence)
-     * OAddon partners = new OAddon(Partners.class).withSequence(2);
-     */
-    OAddon customers = new OAddon(Customers.class).setDefault();
-    OAddon tasks = new OAddon(Tasks.class);
+public class TaskSyncService extends OSyncService {
+    public static final String TAG = TaskSyncService.class.getSimpleName();
+
+    @Override
+    public OSyncAdapter getSyncAdapter(OSyncService service, Context context) {
+        return new OSyncAdapter(context, ProjectTask.class, service, true);
+    }
+
+    @Override
+    public void performDataSync(OSyncAdapter adapter, Bundle extras, OUser user) {
+        adapter.syncDataLimit(80);
+    }
 }
