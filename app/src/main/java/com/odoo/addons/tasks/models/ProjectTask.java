@@ -41,7 +41,7 @@ public class ProjectTask extends OModel {
     public static final String AUTHORITY = "com.odoo.addons.tasks.project_task";
 
     OColumn name = new OColumn("Name", OVarchar.class).setSize(100);
-    OColumn start_date = new OColumn("Start Date", ODateTime.class);
+    OColumn date_start = new OColumn("Start Date", ODateTime.class);
 
     OColumn shipping_origin_id = new OColumn("Origin", ResPartner.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(method = "getOriginName", store = true, depends = {"shipping_origin_id"})
@@ -49,6 +49,7 @@ public class ProjectTask extends OModel {
 
     public ProjectTask(Context context, OUser user) {
         super(context, "project.task", user);
+        setHasMailChatter(true);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ProjectTask extends OModel {
     }
 
     public String getOriginName(OValues row) {
-        String name = "caca";
+        String name = "";
         try {
             if (!row.getString("shipping_origin_id").equals("false")) {
                 JSONArray partner_id = new JSONArray(

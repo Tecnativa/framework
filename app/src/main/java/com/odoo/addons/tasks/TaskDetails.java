@@ -35,6 +35,7 @@ import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.customers.Customers;
 import com.odoo.addons.customers.utils.ShareUtil;
+import com.odoo.addons.tasks.models.ProjectTask;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.base.addons.res.ResPartner;
 import com.odoo.core.orm.ODataRow;
@@ -60,7 +61,7 @@ public class TaskDetails extends OdooCompatActivity
     private final String KEY_MODE = "key_edit_mode";
     private final String KEY_NEW_IMAGE = "key_new_image";
     private Bundle extras;
-    private ResPartner resPartner;
+    private ProjectTask projectTask;
     private ODataRow record = null;
     private ImageView userImage = null;
     private OForm mForm;
@@ -71,35 +72,28 @@ public class TaskDetails extends OdooCompatActivity
     private String newImage = null;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
-    private Customers.Type partnerType = Customers.Type.Customer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.customer_detail);
+        setContentView(R.layout.task_detail);
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.customer_collapsing_toolbar);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.task_collapsing_toolbar);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        userImage = (ImageView) findViewById(R.id.user_image);
-        findViewById(R.id.captureImage).setOnClickListener(this);
-
         fileManager = new OFileManager(this);
         if (toolbar != null)
             collapsingToolbarLayout.setTitle("");
         if (savedInstanceState != null) {
             mEditMode = savedInstanceState.getBoolean(KEY_MODE);
-            newImage = savedInstanceState.getString(KEY_NEW_IMAGE);
         }
         app = (App) getApplicationContext();
-        resPartner = new ResPartner(this, null);
+        projectTask = new ProjectTask(this, null);
         extras = getIntent().getExtras();
-        if (hasRecordInExtra())
-            partnerType = Customers.Type.valueOf(extras.getString(KEY_PARTNER_TYPE));
         if (!hasRecordInExtra())
             mEditMode = true;
         setupToolbar();
@@ -110,12 +104,11 @@ public class TaskDetails extends OdooCompatActivity
     }
 
     private void setMode(Boolean edit) {
-        findViewById(R.id.captureImage).setVisibility(edit ? View.VISIBLE : View.GONE);
         if (mMenu != null) {
-            mMenu.findItem(R.id.menu_customer_detail_more).setVisible(!edit);
-            mMenu.findItem(R.id.menu_customer_edit).setVisible(!edit);
-            mMenu.findItem(R.id.menu_customer_save).setVisible(edit);
-            mMenu.findItem(R.id.menu_customer_cancel).setVisible(edit);
+            mMenu.findItem(R.id.menu_task_detail_more).setVisible(!edit);
+            mMenu.findItem(R.id.menu_task_edit).setVisible(!edit);
+            mMenu.findItem(R.id.menu_task_save).setVisible(edit);
+            mMenu.findItem(R.id.menu_task_cancel).setVisible(edit);
         }
         int color = Color.DKGRAY;
         if (record != null) {
@@ -125,15 +118,13 @@ public class TaskDetails extends OdooCompatActivity
             if (!hasRecordInExtra()) {
                 collapsingToolbarLayout.setTitle("New");
             }
-            mForm = (OForm) findViewById(R.id.customerFormEdit);
-            findViewById(R.id.customer_view_layout).setVisibility(View.GONE);
-            findViewById(R.id.customer_edit_layout).setVisibility(View.VISIBLE);
-            OField is_company = (OField) findViewById(R.id.is_company_edit);
-            is_company.setOnValueChangeListener(this);
+            mForm = (OForm) findViewById(R.id.taskFormEdit);
+            findViewById(R.id.task_view_layout).setVisibility(View.GONE);
+            findViewById(R.id.task_edit_layout).setVisibility(View.VISIBLE);
         } else {
-            mForm = (OForm) findViewById(R.id.customerForm);
-            findViewById(R.id.customer_edit_layout).setVisibility(View.GONE);
-            findViewById(R.id.customer_view_layout).setVisibility(View.VISIBLE);
+            mForm = (OForm) findViewById(R.id.taskForm);
+            findViewById(R.id.task_edit_layout).setVisibility(View.GONE);
+            findViewById(R.id.task_view_layout).setVisibility(View.VISIBLE);
         }
         setColor(color);
     }
@@ -147,18 +138,13 @@ public class TaskDetails extends OdooCompatActivity
             mForm.initForm(null);
         } else {
             int rowId = extras.getInt(OColumn.ROW_ID);
-            record = resPartner.browse(rowId);
-            record.put("full_address", resPartner.getAddress(record));
+            record = projectTask.browse(rowId);
+//            record.put("full_address", resPartner.getAddress(record));
             checkControls();
             setMode(mEditMode);
             mForm.setEditable(mEditMode);
             mForm.initForm(record);
             collapsingToolbarLayout.setTitle(record.getString("name"));
-            setCustomerImage();
-            if (record.getInt("id") != 0 && record.getString("large_image").equals("false")) {
-                BigImageLoader bigImageLoader = new BigImageLoader();
-                bigImageLoader.execute(record.getInt("id"));
-            }
         }
     }
 
@@ -187,32 +173,11 @@ public class TaskDetails extends OdooCompatActivity
     }
 
     private void checkControls() {
-        findViewById(R.id.full_address).setOnClickListener(this);
-        findViewById(R.id.website).setOnClickListener(this);
-        findViewById(R.id.email).setOnClickListener(this);
-        findViewById(R.id.phone_number).setOnClickListener(this);
-        findViewById(R.id.mobile_number).setOnClickListener(this);
-    }
-
-    private void setCustomerImage() {
-
-        if (record != null && !record.getString("image_small").equals("false")) {
-            userImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            String base64 = newImage;
-            if (newImage == null) {
-                if (!record.getString("large_image").equals("false")) {
-                    base64 = record.getString("large_image");
-                } else {
-                    base64 = record.getString("image_small");
-                }
-            }
-            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, base64));
-        } else {
-            userImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            userImage.setColorFilter(Color.WHITE);
-            int color = OStringColorUtil.getStringColor(this, record.getString("name"));
-            userImage.setBackgroundColor(color);
-        }
+        findViewById(R.id.date_start).setOnClickListener(this);
+//        findViewById(R.id.website).setOnClickListener(this);
+//        findViewById(R.id.email).setOnClickListener(this);
+//        findViewById(R.id.phone_number).setOnClickListener(this);
+//        findViewById(R.id.mobile_number).setOnClickListener(this);
     }
 
     private void setColor(int color) {
@@ -225,54 +190,40 @@ public class TaskDetails extends OdooCompatActivity
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.menu_customer_save:
+            case R.id.menu_task_save:
                 OValues values = mForm.getValues();
                 if (values != null) {
-                    switch (partnerType) {
-                        case Supplier:
-                            values.put("customer", "false");
-                            values.put("supplier", "true");
-                            break;
-                        default:
-                            values.put("customer", "true");
-                            break;
-                    }
-                    if (newImage != null) {
-                        values.put("image_small", newImage);
-                        values.put("large_image", newImage);
-                    }
                     if (record != null) {
-                        resPartner.update(record.getInt(OColumn.ROW_ID), values);
+                        projectTask.update(record.getInt(OColumn.ROW_ID), values);
                         Toast.makeText(this, R.string.toast_information_saved, Toast.LENGTH_LONG).show();
                         mEditMode = !mEditMode;
                         setupToolbar();
                     } else {
-                        final int row_id = resPartner.insert(values);
+                        final int row_id = projectTask.insert(values);
                         if (row_id != OModel.INVALID_ROW_ID) {
                             finish();
                         }
                     }
                 }
                 break;
-            case R.id.menu_customer_cancel:
-            case R.id.menu_customer_edit:
+            case R.id.menu_task_cancel:
+            case R.id.menu_task_edit:
                 if (hasRecordInExtra()) {
                     mEditMode = !mEditMode;
                     setMode(mEditMode);
                     mForm.setEditable(mEditMode);
                     mForm.initForm(record);
-                    setCustomerImage();
                 } else {
                     finish();
                 }
                 break;
-            case R.id.menu_customer_share:
+            case R.id.menu_task_share:
                 ShareUtil.shareContact(this, record, true);
                 break;
-            case R.id.menu_customer_import:
+            case R.id.menu_task_import:
                 ShareUtil.shareContact(this, record, false);
                 break;
-            case R.id.menu_customer_delete:
+            case R.id.menu_task_delete:
                 OAlert.showConfirm(this, OResource.string(this,
                         R.string.confirm_are_you_sure_want_to_delete),
                         new OAlert.OnAlertConfirmListener() {
@@ -280,7 +231,7 @@ public class TaskDetails extends OdooCompatActivity
                             public void onConfirmChoiceSelect(OAlert.ConfirmType type) {
                                 if (type == OAlert.ConfirmType.POSITIVE) {
                                     // Deleting record and finishing activity if success.
-                                    if (resPartner.delete(record.getInt(OColumn.ROW_ID))) {
+                                    if (projectTask.delete(record.getInt(OColumn.ROW_ID))) {
                                         Toast.makeText(TaskDetails.this, R.string.toast_record_deleted,
                                                 Toast.LENGTH_SHORT).show();
                                         finish();
@@ -296,7 +247,7 @@ public class TaskDetails extends OdooCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_customer_detail, menu);
+        getMenuInflater().inflate(R.menu.menu_task_detail, menu);
         mMenu = menu;
         setMode(mEditMode);
         return true;
@@ -311,39 +262,39 @@ public class TaskDetails extends OdooCompatActivity
         }
     }
 
-    private class BigImageLoader extends AsyncTask<Integer, Void, String> {
-
-        @Override
-        protected String doInBackground(Integer... params) {
-            String image = null;
-            try {
-                Thread.sleep(300);
-                OdooFields fields = new OdooFields();
-                fields.addAll(new String[]{"image_medium"});
-                OdooResult record = resPartner.getServerDataHelper().read(null, params[0]);
-                if (record != null && !record.getString("image_medium").equals("false")) {
-                    image = record.getString("image_medium");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return image;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                if (!result.equals("false")) {
-                    OValues values = new OValues();
-                    values.put("large_image", result);
-                    resPartner.update(record.getInt(OColumn.ROW_ID), values);
-                    record.put("large_image", result);
-                    setCustomerImage();
-                }
-            }
-        }
-    }
+//    private class BigImageLoader extends AsyncTask<Integer, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(Integer... params) {
+//            String image = null;
+//            try {
+//                Thread.sleep(300);
+//                OdooFields fields = new OdooFields();
+//                fields.addAll(new String[]{"image_medium"});
+//                OdooResult record = projectTask.getServerDataHelper().read(null, params[0]);
+//                if (record != null && !record.getString("image_medium").equals("false")) {
+//                    image = record.getString("image_medium");
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return image;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            super.onPostExecute(result);
+//            if (result != null) {
+//                if (!result.equals("false")) {
+//                    OValues values = new OValues();
+//                    values.put("large_image", result);
+//                    projectTask.update(record.getInt(OColumn.ROW_ID), values);
+//                    record.put("large_image", result);
+//                    settaskImage();
+//                }
+//            }
+//        }
+//    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

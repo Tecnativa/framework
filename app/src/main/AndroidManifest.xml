@@ -121,6 +121,10 @@
             android:label="@string/sync_label_tasks"
             android:multiprocess="true" />
 
+        <activity
+            android:name="com.odoo.addons.tasks.TaskDetails"
+            android:windowSoftInputMode="adjustPan" />
+
     </application>
 
 </manifest>

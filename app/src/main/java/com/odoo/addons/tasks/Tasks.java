@@ -82,11 +82,11 @@ public class Tasks extends BaseFragment implements ISyncStatusObserverListener,
 
         mAdapter = new OCursorListAdapter(getActivity(), null, R.layout.task_row_item);
         mAdapter.setOnViewBindListener(this);
-//        mAdapter.setHasSectionIndexers(true, "name");
+        mAdapter.setHasSectionIndexers(true, "name");
         mTasksList.setAdapter(mAdapter);
-//        mTasksList.setFastScrollAlwaysVisible(true);
-//        mTasksList.setOnItemClickListener(this);
-//        setHasFloatingButton(view, R.id.fabButton, mTasksList, this);
+        mTasksList.setFastScrollAlwaysVisible(true);
+        mTasksList.setOnItemClickListener(this);
+        setHasFloatingButton(view, R.id.fabButton, mTasksList, this);
         setHasSyncStatusObserver(KEY, this, db());
         getLoaderManager().initLoader(0, null, this);
     }

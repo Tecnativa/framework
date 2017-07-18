@@ -43,12 +43,12 @@
                 style="@style/ViewSeparator"
                 android:layout_marginLeft="72dp" />
 
-            <odoo.controls.OField
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:fieldLabelColor="@color/theme_secondary"
-                app:fieldName="shipping_origin_id"
-                app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>
+            <!--<odoo.controls.OField-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:fieldLabelColor="@color/theme_secondary"-->
+                <!--app:fieldName="shipping_origin_id"-->
+                <!--app:fieldTextAppearance="?android:textAppearanceMedium"></odoo.controls.OField>-->
 
 
             <!--<odoo.controls.OField-->
@@ -99,6 +99,17 @@
 
                 <View style="@style/ViewSeparator" />
 
+                <odoo.controls.OField
+                    android:id="@+id/date_start_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/default_8dp"
+                    app:fieldName="date_start"
+                    app:fieldTextAppearance="?android:textAppearanceLarge"
+                    app:showIcon="false"
+                    app:showLabel="false"></odoo.controls.OField>
+
+
                 <!--<odoo.controls.OField-->
                     <!--android:id="@+id/unload"-->
                     <!--android:layout_width="match_parent"-->
@@ -107,14 +118,14 @@
                     <!--app:fieldTextAppearance="?android:textAppearanceMedium"-->
                     <!--app:showLabel="false"></odoo.controls.OField>-->
 
-                <odoo.controls.OField
-                    android:id="@+id/shipping_origin_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:fieldName="shipping_origin_id"
-                    app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"
-                    app:widgetType="SearchableLive"></odoo.controls.OField>
+                <!--<odoo.controls.OField-->
+                    <!--android:id="@+id/shipping_origin_id"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--app:fieldName="shipping_origin_id"-->
+                    <!--app:fieldTextAppearance="?android:textAppearanceMedium"-->
+                    <!--app:showLabel="false"-->
+                    <!--app:widgetType="SearchableLive"></odoo.controls.OField>-->
 
                 <View
                     style="@style/ViewSeparator"
