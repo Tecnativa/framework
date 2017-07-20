@@ -148,7 +148,7 @@ public class MailChatterCompose extends OdooCompatActivity implements View.OnCli
                 finish();
                 break;
             case R.id.btnAttachment:
-                fileManager.requestForFile(OFileManager.RequestType.ALL_FILE_TYPE);
+                fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
         }
     }
@@ -326,7 +326,7 @@ public class MailChatterCompose extends OdooCompatActivity implements View.OnCli
                 context.put("mail_post_autofollow", true);
                 context.put("mail_post_autofollow_partner_ids", new ArrayList<>());
                 data.put("context", context);
-                data.put("type", "comment");
+                data.put("message_type", "comment");
                 data.put("content_subtype", "plaintext");
                 data.put("subtype", (mType == MessageType.Message) ? "mail.mt_comment" : false);
                 Double newId = (double)

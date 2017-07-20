@@ -182,7 +182,9 @@ public class MailChatterView extends LinearLayout implements
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         ODataRow row = (ODataRow) chatterItems.get(position);
-        if (row.getString("subtype_id").equals("false")) {
+        // TODO: Check internal note field in subtype
+        String subtypeNote = "2";
+        if (!row.getString("subtype_id").equals(subtypeNote)) {
             view.setBackgroundResource(R.color.base_chatter_view_note_background);
         } else {
             view.setBackgroundColor(Color.WHITE);

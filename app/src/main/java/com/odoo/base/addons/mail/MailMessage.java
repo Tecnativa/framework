@@ -50,7 +50,7 @@ public class MailMessage extends OModel {
     OColumn res_id = new OColumn("Resource Id", OInteger.class).setDefaultValue(0);
     OColumn attachment_ids = new OColumn("Attachments", IrAttachment.class,
             OColumn.RelationType.ManyToMany);
-    OColumn type = new OColumn("Type", OVarchar.class);
+    OColumn message_type = new OColumn("Type", OVarchar.class);
     OColumn subtype_id = new OColumn("Subtype", MailMessageSubType.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(method = "authorName", depends = {"author_id", "email_from"}, store = true)
     OColumn author_name = new OColumn("Author Name", OVarchar.class).setLocalColumn();

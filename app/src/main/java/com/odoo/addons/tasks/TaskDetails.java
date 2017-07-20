@@ -63,7 +63,7 @@ public class TaskDetails extends OdooCompatActivity
     private Bundle extras;
     private ProjectTask projectTask;
     private ODataRow record = null;
-    private ImageView userImage = null;
+//    private ImageView userImage = null;
     private OForm mForm;
     private App app;
     private Boolean mEditMode = false;
@@ -132,8 +132,8 @@ public class TaskDetails extends OdooCompatActivity
     private void setupToolbar() {
         if (!hasRecordInExtra()) {
             setMode(mEditMode);
-            userImage.setColorFilter(Color.parseColor("#ffffff"));
-            userImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//            userImage.setColorFilter(Color.parseColor("#ffffff"));
+//            userImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             mForm.setEditable(mEditMode);
             mForm.initForm(null);
         } else {
@@ -309,9 +309,9 @@ public class TaskDetails extends OdooCompatActivity
         OValues values = fileManager.handleResult(requestCode, resultCode, data);
         if (values != null && !values.contains("size_limit_exceed")) {
             newImage = values.getString("datas");
-            userImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            userImage.setColorFilter(null);
-            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
+//            userImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            userImage.setColorFilter(null);
+//            userImage.setImageBitmap(BitmapUtils.getBitmapImage(this, newImage));
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
