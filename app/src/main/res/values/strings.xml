@@ -18,4 +18,5 @@
     <string name="toast_record_deleted">Record deleted</string>
     <string name="label_no_task_found">No task found</string>
     <string name="sync_label_tasks">Tasks</string>
+    <string name="sync_label_task_chekpoints">Checkpoints</string>
 </resources>

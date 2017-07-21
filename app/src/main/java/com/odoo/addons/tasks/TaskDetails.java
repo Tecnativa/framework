@@ -28,6 +28,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -48,14 +50,20 @@ import com.odoo.core.support.OdooCompatActivity;
 import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OAlert;
+import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import odoo.controls.ExpandableListControl;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
 public class TaskDetails extends OdooCompatActivity
-        implements View.OnClickListener, OField.IOnFieldValueChangeListener {
+        implements View.OnClickListener, OField.IOnFieldValueChangeListener{
     public static final String TAG = TaskDetails.class.getSimpleName();
     public static String KEY_PARTNER_TYPE = "partner_type";
     private final String KEY_MODE = "key_edit_mode";
@@ -63,7 +71,15 @@ public class TaskDetails extends OdooCompatActivity
     private Bundle extras;
     private ProjectTask projectTask;
     private ODataRow record = null;
-//    private ImageView userImage = null;
+    private ExpandableListControl mList;
+    private HashMap<String, String> lineValues = new HashMap<>();
+    private HashMap<String, Integer> lineIds = new HashMap<>();
+    private List<Object> objects = new ArrayList<>();
+    private ExpandableListControl.ExpandableListAdapter mAdapter;
+
+    private ResPartner places = null;
+
+    //    private ImageView userImage = null;
     private OForm mForm;
     private App app;
     private Boolean mEditMode = false;
@@ -96,7 +112,9 @@ public class TaskDetails extends OdooCompatActivity
         extras = getIntent().getExtras();
         if (!hasRecordInExtra())
             mEditMode = true;
+        places = new ResPartner(this, null);
         setupToolbar();
+        initAdapter();
     }
 
     private boolean hasRecordInExtra() {
@@ -128,6 +146,38 @@ public class TaskDetails extends OdooCompatActivity
         }
         setColor(color);
     }
+
+    private void initAdapter() {
+        mList = (ExpandableListControl) findViewById(R.id.expListCheckPoint);
+        mList.setVisibility(View.VISIBLE);
+        if (extras != null && record != null) {
+            List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").browseEach();
+            objects.addAll(lines);
+        }
+        mAdapter = mList.getAdapter(R.layout.task_checkpoint_line_item, objects,
+                new ExpandableListControl.ExpandableListAdapterGetViewListener() {
+                    @Override
+                    public View getView(int position, View mView, ViewGroup parent) {
+                        ODataRow row = (ODataRow) mAdapter.getItem(position);
+                        OControls.setText(mView, R.id.taskCheckpointName, row.getString("name"));
+                        mView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                longClick(v);
+                                return true;
+                            }
+                        });
+                        
+                        return mView;
+                    }
+
+                });
+        mAdapter.notifyDataSetChanged(objects);
+    }
+
+    private void longClick(View v) {
+    }
+
 
     private void setupToolbar() {
         if (!hasRecordInExtra()) {
@@ -174,8 +224,7 @@ public class TaskDetails extends OdooCompatActivity
 
     private void checkControls() {
         findViewById(R.id.date_start).setOnClickListener(this);
-//        findViewById(R.id.website).setOnClickListener(this);
-//        findViewById(R.id.email).setOnClickListener(this);
+//        findViewById(R.id.expListCheckPoint).setOnClickListener(this);
 //        findViewById(R.id.phone_number).setOnClickListener(this);
 //        findViewById(R.id.mobile_number).setOnClickListener(this);
     }

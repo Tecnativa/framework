@@ -120,10 +120,15 @@
             android:authorities="com.odoo.addons.tasks.project_task"
             android:label="@string/sync_label_tasks"
             android:multiprocess="true" />
-
         <activity
             android:name="com.odoo.addons.tasks.TaskDetails"
             android:windowSoftInputMode="adjustPan" />
+
+        <provider
+            android:name="com.odoo.addons.tasks.providers.ProjectTaskCheckpointProvider"
+            android:authorities="com.odoo.addons.tasks.project_task_checkpoint"
+            android:label="@string/sync_label_task_chekpoints"
+            android:multiprocess="true" />
 
     </application>
 

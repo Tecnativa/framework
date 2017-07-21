@@ -46,6 +46,8 @@ public class ProjectTask extends OModel {
     OColumn shipping_origin_id = new OColumn("Origin", ResPartner.class, OColumn.RelationType.ManyToOne);
     @Odoo.Functional(method = "getOriginName", store = true, depends = {"shipping_origin_id"})
     OColumn shipping_origin_name = new OColumn("Origin", OVarchar.class);
+    OColumn checkpoint_ids = new OColumn("Contacts", ProjectTaskCheckpoint.class, OColumn.RelationType.OneToMany).
+            setRelatedColumn("task_id");
 
     public ProjectTask(Context context, OUser user) {
         super(context, "project.task", user);

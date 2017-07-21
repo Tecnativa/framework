@@ -20,6 +20,7 @@
 package com.odoo.addons.tasks.services;
 
 import android.content.Context;
+import android.content.SyncResult;
 import android.os.Bundle;
 
 import com.odoo.addons.tasks.models.ProjectTask;
@@ -39,4 +40,9 @@ public class TaskSyncService extends OSyncService {
     public void performDataSync(OSyncAdapter adapter, Bundle extras, OUser user) {
         adapter.syncDataLimit(80);
     }
+
+//    @Override
+//    public OSyncAdapter performNextSync(OUser user, SyncResult syncResult) {
+//        return new OSyncAdapter(mContext, ResCountry.class, this, true);
+//    }
 }
