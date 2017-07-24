@@ -63,7 +63,7 @@ import odoo.controls.OField;
 import odoo.controls.OForm;
 
 public class TaskDetails extends OdooCompatActivity
-        implements View.OnClickListener, OField.IOnFieldValueChangeListener{
+        implements View.OnClickListener, OField.IOnFieldValueChangeListener, AdapterView.OnItemClickListener{
     public static final String TAG = TaskDetails.class.getSimpleName();
     public static String KEY_PARTNER_TYPE = "partner_type";
     private final String KEY_MODE = "key_edit_mode";
@@ -160,17 +160,14 @@ public class TaskDetails extends OdooCompatActivity
                     public View getView(int position, View mView, ViewGroup parent) {
                         ODataRow row = (ODataRow) mAdapter.getItem(position);
                         OControls.setText(mView, R.id.taskCheckpointName, row.getString("name"));
-                        mView.setOnLongClickListener(new View.OnLongClickListener() {
+                        mView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public boolean onLongClick(View v) {
-                                longClick(v);
-                                return true;
+                            public void onClick(View v) {
+                                System.out.println("Clicked " + 1);
                             }
                         });
-                        
                         return mView;
                     }
-
                 });
         mAdapter.notifyDataSetChanged(objects);
     }
@@ -220,6 +217,7 @@ public class TaskDetails extends OdooCompatActivity
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
                 break;
         }
+
     }
 
     private void checkControls() {
@@ -364,5 +362,11 @@ public class TaskDetails extends OdooCompatActivity
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Boolean pepe = false;
+        pepe = true;
     }
 }
