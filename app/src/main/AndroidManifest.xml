@@ -124,6 +124,18 @@
             android:name="com.odoo.addons.tasks.TaskDetails"
             android:windowSoftInputMode="adjustPan" />
 
+        <service
+            android:name=".addons.tasks.services.TaskCheckpointSyncService"
+            android:exported="true"
+            android:process=":sync_checkpoint">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/task_checkpoint_sync_adapter" />
+        </service>
         <provider
             android:name="com.odoo.addons.tasks.providers.ProjectTaskCheckpointProvider"
             android:authorities="com.odoo.addons.tasks.project_task_checkpoint"

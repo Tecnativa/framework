@@ -20,17 +20,22 @@
 package com.odoo.addons.tasks;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.odoo.App;
@@ -38,6 +43,7 @@ import com.odoo.R;
 import com.odoo.addons.customers.Customers;
 import com.odoo.addons.customers.utils.ShareUtil;
 import com.odoo.addons.tasks.models.ProjectTask;
+import com.odoo.addons.tasks.models.ProjectTaskCheckpoint;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.base.addons.res.ResPartner;
 import com.odoo.core.orm.ODataRow;
@@ -51,6 +57,7 @@ import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OControls;
+import com.odoo.core.utils.OCursorUtils;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
 
@@ -63,7 +70,7 @@ import odoo.controls.OField;
 import odoo.controls.OForm;
 
 public class TaskDetails extends OdooCompatActivity
-        implements View.OnClickListener, OField.IOnFieldValueChangeListener, AdapterView.OnItemClickListener{
+        implements View.OnClickListener, OField.IOnFieldValueChangeListener{
     public static final String TAG = TaskDetails.class.getSimpleName();
     public static String KEY_PARTNER_TYPE = "partner_type";
     private final String KEY_MODE = "key_edit_mode";
@@ -78,6 +85,7 @@ public class TaskDetails extends OdooCompatActivity
     private ExpandableListControl.ExpandableListAdapter mAdapter;
 
     private ResPartner places = null;
+    private ProjectTaskCheckpoint checkpoints = null;
 
     //    private ImageView userImage = null;
     private OForm mForm;
@@ -88,12 +96,15 @@ public class TaskDetails extends OdooCompatActivity
     private String newImage = null;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
+    private FloatingActionButton buttonClock;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.task_detail);
 
+        buttonClock = (FloatingActionButton) findViewById(R.id.btnClock);
+        buttonClock.setOnClickListener(this);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.task_collapsing_toolbar);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -113,6 +124,7 @@ public class TaskDetails extends OdooCompatActivity
         if (!hasRecordInExtra())
             mEditMode = true;
         places = new ResPartner(this, null);
+        checkpoints = new ProjectTaskCheckpoint(this, null);
         setupToolbar();
         initAdapter();
     }
@@ -160,10 +172,11 @@ public class TaskDetails extends OdooCompatActivity
                     public View getView(int position, View mView, ViewGroup parent) {
                         ODataRow row = (ODataRow) mAdapter.getItem(position);
                         OControls.setText(mView, R.id.taskCheckpointName, row.getString("name"));
+                        OControls.setText(mView, R.id.taskCheckpointArrivalTime, row.getString("arrival_time"));
                         mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                System.out.println("Clicked " + 1);
+                                System.out.println("Start activity checkpoint");
                             }
                         });
                         return mView;
@@ -215,6 +228,22 @@ public class TaskDetails extends OdooCompatActivity
                 break;
             case R.id.captureImage:
                 fileManager.requestForFile(OFileManager.RequestType.IMAGE_OR_CAPTURE_IMAGE);
+                break;
+            case R.id.btnClock:
+                System.out.println("click clock");
+                if (extras != null && record != null) {
+                    List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").browseEach();
+                    for (ODataRow line : lines) {
+                        int place_id = places.selectServerId(line.getInt("place_id"));
+//                        int line_id = checkpoints.selectServerId(line.getInt("_id"));
+                        if (line.getString("arrival_time").equals("false")){
+                            OValues values = new OValues();
+                            values.put("arrival_time", "2017-07-25 18:30:00");
+                            boolean updated = checkpoints.update(line.getInt("_id"), values);
+                        }
+                    }
+                }
+
                 break;
         }
 
@@ -362,11 +391,5 @@ public class TaskDetails extends OdooCompatActivity
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Boolean pepe = false;
-        pepe = true;
     }
 }

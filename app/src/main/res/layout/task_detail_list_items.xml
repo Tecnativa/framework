@@ -76,6 +76,8 @@
         </odoo.controls.OForm>
     </LinearLayout>
     <!--Edit Layout-->
+
+
     <LinearLayout
         android:id="@+id/task_edit_layout"
         android:layout_width="match_parent"

@@ -65,8 +65,16 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/captureImage"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="@dimen/default_16dp"-->
+        <!--android:src="@drawable/ic_action_camera"-->
+        <!--app:layout_anchor="@id/task_detail_appbar"-->
+        <!--app:layout_anchorGravity="bottom|right|end" />-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/captureImage"
+        android:id="@+id/btnClock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/default_16dp"

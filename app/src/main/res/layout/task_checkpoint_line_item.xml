@@ -29,14 +29,13 @@
                 android:layout_width="wrap_content"
                 android:fontFamily="@string/font_normal"
                 android:layout_height="wrap_content" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/checkpoint_clock"
+            <TextView
+                android:id="@+id/taskCheckpointArrivalTime"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@color/body_text_1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/default_16dp"
-                android:src="@drawable/ic_action_camera"
-            />
+                android:fontFamily="@string/font_normal"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
