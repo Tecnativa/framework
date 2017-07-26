@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import com.odoo.BuildConfig;
+import com.odoo.addons.checkpoints.models.ProjectTaskCheckpoint;
 import com.odoo.base.addons.res.ResPartner;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;

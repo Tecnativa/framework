@@ -18,13 +18,12 @@
  * Created on 2/1/15 11:07 AM
  */
 
-package com.odoo.addons.tasks.services;
+package com.odoo.addons.checkpoints.services;
 
 import android.content.Context;
 import android.os.Bundle;
 
-import com.odoo.addons.tasks.models.ProjectTask;
-import com.odoo.addons.tasks.models.ProjectTaskCheckpoint;
+import com.odoo.addons.checkpoints.models.ProjectTaskCheckpoint;
 import com.odoo.core.rpc.helper.ODomain;
 import com.odoo.core.service.OSyncAdapter;
 import com.odoo.core.service.OSyncService;

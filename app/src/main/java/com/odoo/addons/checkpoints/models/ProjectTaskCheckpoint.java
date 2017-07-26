@@ -17,16 +17,14 @@
  * <p>
  * Created on 2/1/15 2:25 PM
  */
-package com.odoo.addons.tasks.models;
+package com.odoo.addons.checkpoints.models;
 
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
 
+import com.odoo.addons.tasks.models.ProjectTask;
 import com.odoo.base.addons.res.ResPartner;
 import com.odoo.core.orm.OModel;
-import com.odoo.core.orm.OValues;
-import com.odoo.core.orm.annotation.Odoo;
 import com.odoo.core.orm.fields.OColumn;
 import com.odoo.core.orm.fields.types.ODateTime;
 import com.odoo.core.orm.fields.types.OFloat;
@@ -34,12 +32,10 @@ import com.odoo.core.orm.fields.types.OInteger;
 import com.odoo.core.orm.fields.types.OVarchar;
 import com.odoo.core.support.OUser;
 
-import org.json.JSONArray;
-
 
 public class ProjectTaskCheckpoint extends OModel {
     public static final String TAG = ProjectTaskCheckpoint.class.getSimpleName();
-    public static final String AUTHORITY = "com.odoo.addons.tasks.project_task_checkpoint";
+    public static final String AUTHORITY = "com.odoo.addons.checkpoints.project_task_checkpoint";
 
     OColumn name = new OColumn("Name", OVarchar.class);
     OColumn sequence = new OColumn("Sequence", OInteger.class);
@@ -51,21 +47,6 @@ public class ProjectTaskCheckpoint extends OModel {
     OColumn stopped_time = new OColumn("Stopped Time", OFloat.class);
     OColumn task_id = new OColumn("Task", ProjectTask.class, OColumn.RelationType.ManyToOne);
 
-//    package_origin_ids = fields.Many2many(
-//    comodel_name='tms.package',
-//    relation='project_task_checkpoint_tms_package_origin_rel',
-//    column1='checkpoint_id',
-//    column2='package_id',
-//    string='Packages Origin',
-//            )
-//    package_destination_ids = fields.Many2many(
-//    comodel_name='tms.package',
-//    relation='project_task_checkpoint_tms_package_destination_rel',
-//    column1='checkpoint_id',
-//    column2='package_id',
-//    string='Packages Destination',
-//            )
-
     public ProjectTaskCheckpoint(Context context, OUser user) {
         super(context, "project.task.checkpoint", user);
     }
@@ -74,23 +55,5 @@ public class ProjectTaskCheckpoint extends OModel {
     public Uri uri() {
         return buildURI(AUTHORITY);
     }
-
-    public String getPlaceName(OValues row) {
-        String name = "";
-        try {
-            if (!row.getString("place_id").equals("false")) {
-                JSONArray place_id = new JSONArray(
-                        row.getString("place_id"));
-                name = place_id.getString(1);
-            }
-            if (TextUtils.isEmpty(name)) {
-                name = "No Place";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return name;
-    }
-
 
 }

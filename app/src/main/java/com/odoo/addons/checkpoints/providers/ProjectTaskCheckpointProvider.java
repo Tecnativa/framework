@@ -17,19 +17,13 @@
  *
  * Created on 13/1/15 11:28 AM
  */
-package com.odoo.addons.tasks.providers;
+package com.odoo.addons.checkpoints.providers;
 
-import com.odoo.addons.tasks.models.ProjectTaskCheckpoint;
+import com.odoo.addons.checkpoints.models.ProjectTaskCheckpoint;
 import com.odoo.core.orm.provider.BaseModelProvider;
 
 public class ProjectTaskCheckpointProvider extends BaseModelProvider {
     public static final String TAG = ProjectTaskCheckpointProvider.class.getSimpleName();
-
-//    @Override
-//    public void setModel(Uri uri) {
-//        super.setModel(uri);
-//        mModel = new ProjectTask(getContext(), getUser(uri));
-//    }
 
     @Override
     public String authority() {

@@ -40,10 +40,12 @@ import android.widget.Toast;
 
 import com.odoo.App;
 import com.odoo.R;
+import com.odoo.addons.checkpoints.CheckPointDetails;
+import com.odoo.addons.checkpoints.models.ProjectTaskCheckpoint;
+import com.odoo.addons.customers.CustomerDetails;
 import com.odoo.addons.customers.Customers;
 import com.odoo.addons.customers.utils.ShareUtil;
 import com.odoo.addons.tasks.models.ProjectTask;
-import com.odoo.addons.tasks.models.ProjectTaskCheckpoint;
 import com.odoo.base.addons.ir.feature.OFileManager;
 import com.odoo.base.addons.res.ResPartner;
 import com.odoo.core.orm.ODataRow;
@@ -60,34 +62,33 @@ import com.odoo.core.utils.OControls;
 import com.odoo.core.utils.OCursorUtils;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
+import com.odoo.core.utils.ODateUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import odoo.controls.ExpandableListControl;
+import odoo.controls.ODateTimeField;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
 public class TaskDetails extends OdooCompatActivity
-        implements View.OnClickListener, OField.IOnFieldValueChangeListener{
+        implements View.OnClickListener, OField.IOnFieldValueChangeListener, AdapterView.OnItemClickListener{
     public static final String TAG = TaskDetails.class.getSimpleName();
-    public static String KEY_PARTNER_TYPE = "partner_type";
     private final String KEY_MODE = "key_edit_mode";
     private final String KEY_NEW_IMAGE = "key_new_image";
     private Bundle extras;
     private ProjectTask projectTask;
     private ODataRow record = null;
     private ExpandableListControl mList;
-    private HashMap<String, String> lineValues = new HashMap<>();
-    private HashMap<String, Integer> lineIds = new HashMap<>();
     private List<Object> objects = new ArrayList<>();
     private ExpandableListControl.ExpandableListAdapter mAdapter;
 
     private ResPartner places = null;
     private ProjectTaskCheckpoint checkpoints = null;
 
-    //    private ImageView userImage = null;
     private OForm mForm;
     private App app;
     private Boolean mEditMode = false;
@@ -97,6 +98,8 @@ public class TaskDetails extends OdooCompatActivity
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
     private FloatingActionButton buttonClock;
+    private ArrayList<String> timeFields = new ArrayList<String>(
+            Arrays.asList("arrival_time", "departure_time"));
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,21 +176,28 @@ public class TaskDetails extends OdooCompatActivity
                         ODataRow row = (ODataRow) mAdapter.getItem(position);
                         OControls.setText(mView, R.id.taskCheckpointName, row.getString("name"));
                         OControls.setText(mView, R.id.taskCheckpointArrivalTime, row.getString("arrival_time"));
-                        mView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                System.out.println("Start activity checkpoint");
-                            }
-                        });
+//                        mView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                boolean a=false;
+//                                a = true;
+//                                System.out.println("Start activity checkpoint");
+//                            }
+//                        });
                         return mView;
                     }
                 });
+        mList.setOnClickListener(this);
         mAdapter.notifyDataSetChanged(objects);
     }
 
-    private void longClick(View v) {
+    private void loadActivity(ODataRow row) {
+        Bundle data = new Bundle();
+        if (row != null) {
+            data = row.getPrimaryBundleData();
+        }
+        IntentUtils.startActivity(this, CheckPointDetails.class, data);
     }
-
 
     private void setupToolbar() {
         if (!hasRecordInExtra()) {
@@ -204,8 +214,33 @@ public class TaskDetails extends OdooCompatActivity
             setMode(mEditMode);
             mForm.setEditable(mEditMode);
             mForm.initForm(record);
-            collapsingToolbarLayout.setTitle(record.getString("name"));
+//            collapsingToolbarLayout.setTitle(record.getString("name"));
+            setTaskTitle();
         }
+    }
+
+    private void setTaskTitle(){
+        // display next action
+        List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").browseEach();
+        boolean updated = false;
+        for (ODataRow line : lines) {
+            updated = false;
+            for (String timeField: timeFields) {
+                if (line.getString(timeField).equals("false")){
+                    if (timeField.contains("arrival")) {
+                        collapsingToolbarLayout.setTitle("Llegada a: \n" + line.getString("name"));
+                    } else{
+                        collapsingToolbarLayout.setTitle("Salida de: \n" + line.getString("name"));
+                    }
+                    updated = true;
+                    break;
+                };
+            };
+            if (updated) break;
+        };
+        if (!updated) {
+            collapsingToolbarLayout.setTitle("Nada a realizar");
+        };
     }
 
     @Override
@@ -233,16 +268,28 @@ public class TaskDetails extends OdooCompatActivity
                 System.out.println("click clock");
                 if (extras != null && record != null) {
                     List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").browseEach();
+                    String dateNowUTC = ODateUtils.getUTCDate(ODateUtils.DEFAULT_FORMAT);
                     for (ODataRow line : lines) {
+                        boolean updated = false;
                         int place_id = places.selectServerId(line.getInt("place_id"));
-//                        int line_id = checkpoints.selectServerId(line.getInt("_id"));
-                        if (line.getString("arrival_time").equals("false")){
-                            OValues values = new OValues();
-                            values.put("arrival_time", "2017-07-25 18:30:00");
-                            boolean updated = checkpoints.update(line.getInt("_id"), values);
-                        }
-                    }
+                        for (String timeField: timeFields) {
+                            if (line.getString(timeField).equals("false")){
+                                OValues values = new OValues();
+                                values.put(timeField, dateNowUTC);
+                                updated = checkpoints.update(line.getInt("_id"), values);
+                                break;
+                            };
+                        };
+                        if (updated) break;
+                    };
+                    // TODO: Resync optimize
+                    lines = record.getO2MRecord("checkpoint_ids").browseEach();
+                    objects.clear();
+                    objects.addAll(lines);
+                    mAdapter.notifyDataSetChanged(objects);
+                    setTaskTitle();
                 }
+
 
                 break;
         }
@@ -251,7 +298,7 @@ public class TaskDetails extends OdooCompatActivity
 
     private void checkControls() {
         findViewById(R.id.date_start).setOnClickListener(this);
-//        findViewById(R.id.expListCheckPoint).setOnClickListener(this);
+        findViewById(R.id.expListCheckPoint).setOnClickListener(this);
 //        findViewById(R.id.phone_number).setOnClickListener(this);
 //        findViewById(R.id.mobile_number).setOnClickListener(this);
     }
@@ -391,5 +438,11 @@ public class TaskDetails extends OdooCompatActivity
         } else if (values != null) {
             Toast.makeText(this, R.string.toast_image_size_too_large, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        System.out.println("RARARARRARARRARARAR");
+
     }
 }
