@@ -19,9 +19,7 @@
  */
 package com.odoo.addons.checkpoints;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
@@ -42,16 +40,11 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.rpc.helper.OdooFields;
-import com.odoo.core.rpc.helper.utils.gson.OdooResult;
 import com.odoo.core.support.OdooCompatActivity;
-import com.odoo.core.utils.BitmapUtils;
-import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
 
-import odoo.controls.OField;
 import odoo.controls.OForm;
 
 public class CheckPointDetails extends OdooCompatActivity {
@@ -77,7 +70,7 @@ public class CheckPointDetails extends OdooCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.customer_detail);
+        setContentView(R.layout.checkpoint_detail);
 
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.checkpoint_collapsing_toolbar);
 

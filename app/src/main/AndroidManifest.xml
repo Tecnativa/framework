@@ -121,7 +121,7 @@
             android:label="@string/sync_label_tasks"
             android:multiprocess="true" />
         <activity
-            android:name="com.odoo.addons.tasks.TaskDetails"
+            android:name="com.odoo.addons.checkpoints.CheckPointDetails"
             android:windowSoftInputMode="adjustPan" />
 
         <service
@@ -141,6 +141,9 @@
             android:authorities="com.odoo.addons.checkpoints.project_task_checkpoint"
             android:label="@string/sync_label_task_chekpoints"
             android:multiprocess="true" />
+        <activity
+            android:name="com.odoo.addons.tasks.TaskDetails"
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 

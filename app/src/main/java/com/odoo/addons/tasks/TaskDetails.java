@@ -20,9 +20,7 @@
 package com.odoo.addons.tasks;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,18 +30,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.odoo.App;
 import com.odoo.R;
 import com.odoo.addons.checkpoints.CheckPointDetails;
 import com.odoo.addons.checkpoints.models.ProjectTaskCheckpoint;
-import com.odoo.addons.customers.CustomerDetails;
-import com.odoo.addons.customers.Customers;
 import com.odoo.addons.customers.utils.ShareUtil;
 import com.odoo.addons.tasks.models.ProjectTask;
 import com.odoo.base.addons.ir.feature.OFileManager;
@@ -52,25 +44,19 @@ import com.odoo.core.orm.ODataRow;
 import com.odoo.core.orm.OModel;
 import com.odoo.core.orm.OValues;
 import com.odoo.core.orm.fields.OColumn;
-import com.odoo.core.rpc.helper.OdooFields;
-import com.odoo.core.rpc.helper.utils.gson.OdooResult;
 import com.odoo.core.support.OdooCompatActivity;
-import com.odoo.core.utils.BitmapUtils;
 import com.odoo.core.utils.IntentUtils;
 import com.odoo.core.utils.OAlert;
 import com.odoo.core.utils.OControls;
-import com.odoo.core.utils.OCursorUtils;
 import com.odoo.core.utils.OResource;
 import com.odoo.core.utils.OStringColorUtil;
 import com.odoo.core.utils.ODateUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import odoo.controls.ExpandableListControl;
-import odoo.controls.ODateTimeField;
 import odoo.controls.OField;
 import odoo.controls.OForm;
 
@@ -176,18 +162,18 @@ public class TaskDetails extends OdooCompatActivity
                         ODataRow row = (ODataRow) mAdapter.getItem(position);
                         OControls.setText(mView, R.id.taskCheckpointName, row.getString("name"));
                         OControls.setText(mView, R.id.taskCheckpointArrivalTime, row.getString("arrival_time"));
-//                        mView.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                boolean a=false;
-//                                a = true;
-//                                System.out.println("Start activity checkpoint");
-//                            }
-//                        });
+                        mView.setTag(row);
+                        mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ODataRow row = (ODataRow) v.getTag();
+                                System.out.println("Start activity checkpoint");
+                                loadActivity(row);
+                            }
+                        });
                         return mView;
                     }
                 });
-        mList.setOnClickListener(this);
         mAdapter.notifyDataSetChanged(objects);
     }
 
