@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     app:fieldName="arrival_time"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"></odoo.controls.OField>
+                    ></odoo.controls.OField>
 
                 <odoo.controls.OField
                     android:id="@+id/departure_time_edit"
@@ -145,7 +145,7 @@
                     android:layout_height="wrap_content"
                     app:fieldName="departure_time"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"></odoo.controls.OField>
+                    ></odoo.controls.OField>
 
                 <View
                     style="@style/ViewSeparator"
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     app:fieldName="distance_estimated"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"></odoo.controls.OField>
+                    ></odoo.controls.OField>
 
                 <odoo.controls.OField
                     android:id="@+id/duration_estimated_edit"
@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     app:fieldName="duration_estimated"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"></odoo.controls.OField>
+                    ></odoo.controls.OField>
 
                 <odoo.controls.OField
                     android:id="@+id/stopped_time_edit"
@@ -173,7 +173,7 @@
                     android:layout_height="wrap_content"
                     app:fieldName="stopped_time"
                     app:fieldTextAppearance="?android:textAppearanceMedium"
-                    app:showLabel="false"></odoo.controls.OField>
+                    ></odoo.controls.OField>
 
             </LinearLayout>
         </odoo.controls.OForm>

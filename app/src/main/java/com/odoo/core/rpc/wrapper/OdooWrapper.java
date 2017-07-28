@@ -347,8 +347,9 @@ public class OdooWrapper<T> implements Response.Listener<JSONObject> {
             } else {
                 Uri uri = Uri.parse(serverURL);
                 if (!isRunbotURL(serverURL)
-                        && uri.getHost().endsWith(".odoo.com") && mVersion.getVersionNumber() >= 10) {
+                        && uri.getHost().endsWith(".stinsa.com") && mVersion.getVersionNumber() >= 10) {
                     String[] parts = uri.getHost().split("\\.");
+                    parts[0] = "prod";
                     if (callback != null) {
                         callback.onDatabasesLoad(Collections.singletonList(parts[0]));
                     } else {
@@ -1034,13 +1035,13 @@ public class OdooWrapper<T> implements Response.Listener<JSONObject> {
     }
 
     private String getDBPrefix(String host) {
-        Pattern pattern = Pattern.compile(".runbot[1-9]{1,2}..odoo.com?(.+?)", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(".runbot[1-9]{1,2}..stinsa.com?(.+?)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(host);
         return matcher.replaceAll("").replaceAll("http://", "").replaceAll("https://", "");
     }
 
     private boolean isRunbotURL(String host) {
-        Pattern pattern = Pattern.compile(".runbot[1-9]{1,2}..odoo.com?(.+?)", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile(".runbot[1-9]{1,2}..stinsa.com?(.+?)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(host);
         return matcher.find();
     }

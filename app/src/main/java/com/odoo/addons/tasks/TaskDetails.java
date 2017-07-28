@@ -152,7 +152,7 @@ public class TaskDetails extends OdooCompatActivity
         mList = (ExpandableListControl) findViewById(R.id.expListCheckPoint);
         mList.setVisibility(View.VISIBLE);
         if (extras != null && record != null) {
-            List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").browseEach();
+            List<ODataRow> lines = record.getO2MRecord("checkpoint_ids").setOrder("sequence, id").browseEach();
             objects.addAll(lines);
         }
         mAdapter = mList.getAdapter(R.layout.task_checkpoint_line_item, objects,
