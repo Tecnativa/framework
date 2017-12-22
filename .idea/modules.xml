@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/framework.iml" filepath="$PROJECT_DIR$/framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/intro-slider-lib/intro-slider-lib.iml" filepath="$PROJECT_DIR$/intro-slider-lib/intro-slider-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/tms-mobile.iml" filepath="$PROJECT_DIR$/.idea/tms-mobile.iml" />
     </modules>
   </component>
 </project>
