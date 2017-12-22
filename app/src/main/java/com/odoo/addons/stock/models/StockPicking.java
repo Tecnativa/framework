@@ -43,6 +43,7 @@ public class StockPicking extends OModel {
     public static final String TAG = StockPicking.class.getSimpleName();
     public static final String AUTHORITY = "com.odoo.addons.stock.stock_picking";
 
+    OColumn origin = new OColumn("Origin", OVarchar.class).setSize(100);
     OColumn name = new OColumn("Name", OVarchar.class).setSize(100);
     OColumn picking_type_id = new OColumn("Type", StockPickingType.class, OColumn.RelationType.ManyToOne);
     OColumn partner_id = new OColumn("Partner", ResPartner.class, OColumn.RelationType.ManyToOne);

@@ -162,6 +162,12 @@
             android:authorities="com.odoo.addons.stock.stock_picking"
             android:label="@string/sync_label_pickings"
             android:multiprocess="true" />
+        <activity
+            android:name="com.odoo.addons.stock.PickingDetails"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.odoo.addons.stock.PackOperationDetails"
+            android:windowSoftInputMode="adjustPan" />
 
     </application>
 

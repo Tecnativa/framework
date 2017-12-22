@@ -20,6 +20,7 @@
 package com.odoo.config;
 
 import com.odoo.addons.customers.Customers;
+import com.odoo.addons.stock.Pickings;
 import com.odoo.addons.tasks.Tasks;
 import com.odoo.core.support.addons.AddonsHelper;
 import com.odoo.core.support.addons.OAddon;
@@ -35,5 +36,6 @@ public class Addons extends AddonsHelper {
      * OAddon partners = new OAddon(Partners.class).withSequence(2);
      */
     OAddon customers = new OAddon(Customers.class);
-    OAddon tasks = new OAddon(Tasks.class).setDefault();
+    OAddon tasks = new OAddon(Tasks.class);
+    OAddon stock = new OAddon(Pickings.class).setDefault();
 }
