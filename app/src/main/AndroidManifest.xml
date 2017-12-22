@@ -145,6 +145,24 @@
             android:name="com.odoo.addons.tasks.TaskDetails"
             android:windowSoftInputMode="adjustPan" />
 
+        <service
+            android:name=".addons.stock.services.StockPickingSyncService"
+            android:exported="true"
+            android:process=":sync_picking">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/picking_sync_adapter" />
+        </service>
+        <provider
+            android:name="com.odoo.addons.stock.providers.StockPickingProvider"
+            android:authorities="com.odoo.addons.stock.stock_picking"
+            android:label="@string/sync_label_pickings"
+            android:multiprocess="true" />
+
     </application>
 
 </manifest>
